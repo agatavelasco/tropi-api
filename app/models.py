@@ -14,15 +14,14 @@ class Cliente(Base):
     email = Column(String, nullable=False, unique=True)
     telefone = Column(String, nullable=True)
 
-    # Campos de endereço vindo do ViaCEP
-    cep = Column(String(9), nullable=True)           # ex: "01001-000"
+    cep = Column(String(9), nullable=True)         
     logradouro = Column(String, nullable=True)
     numero = Column(String, nullable=True)
     complemento = Column(String, nullable=True)
     bairro = Column(String, nullable=True)
-    localidade = Column(String, nullable=True)       # Cidade
-    uf = Column(String(2), nullable=True)            # SP, RJ...
-    estado = Column(String, nullable=True)           # "São Paulo"
+    localidade = Column(String, nullable=True)
+    uf = Column(String(2), nullable=True)
+    estado = Column(String, nullable=True)
 
     criado_em = Column(DateTime, default=datetime.utcnow)
     atualizado_em = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
