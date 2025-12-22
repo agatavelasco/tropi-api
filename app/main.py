@@ -1,0 +1,32 @@
+# app/main.py
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.database import Base, engine
+from app.routers import clientes, atendimentos, cep
+
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="Tropi API")
+
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(clientes.router)
+app.include_router(atendimentos.router)
+app.include_router(cep.router)
+
+
+@app.get("/")
+def root():
+    return {"message": "Tropi API is running 🌿"}
