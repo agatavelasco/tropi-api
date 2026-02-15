@@ -4,6 +4,8 @@ __pycache__/
 *.pyd
 *.log
 .env
+.env.*
+!.env.example
 .venv/
 venv/
 dist/
@@ -13,3 +15,9 @@ build/
 .idea/
 .vscode/
 .DS_Store
+.git/
+.github/
+*.db
+tropi.db
+README.md
+LICENSE

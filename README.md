@@ -13,7 +13,8 @@ A **Tropi API** é responsável por:
 * Cadastro e listagem de clientes
 * Registro de atendimentos vinculados aos clientes
 * Consulta de endereços a partir de CEP
-* Persistência de dados em banco **SQLite** (ambiente local)
+* Persistência de dados em **PostgreSQL** (Supabase)
+* Autenticação via **Supabase Auth** (JWT)
 * Exposição de documentação automática via **Swagger**
 
 ---
@@ -25,17 +26,15 @@ A **Tropi API** é responsável por:
 * **Uvicorn**
 * **Pydantic v2**
 * **SQLAlchemy**
-* **SQLite**
+* **PostgreSQL** (Supabase)
+* **Alembic** (migrações)
+* **Supabase Auth** (JWT)
+* **Sentry** (monitoramento)
 * **Docker**
-* **Docker Compose**
 
 ---
 
 ## 🚀 Instruções de Instalação
-
-A seguir estão descritas as etapas para configurar o ambiente local e executar a API.
-
----
 
 ### 🔹 1. Clonar o repositório
 
@@ -46,7 +45,7 @@ cd tropi-api
 
 ---
 
-### 🔹 2. Criar e ativar ambiente virtual (opcional, mas recomendado)
+### 🔹 2. Criar e ativar ambiente virtual
 
 ```bash
 python3 -m venv .venv
@@ -61,15 +60,27 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-> ⚠️ Observação: o projeto utiliza o tipo `EmailStr` do Pydantic, portanto a dependência
-> `email-validator` já deve estar listada no `requirements.txt`.
+---
+
+### 🔹 4. Configurar variáveis de ambiente
+
+```bash
+cp .env.example .env
+```
+
+Preencha o `.env` com suas credenciais do Supabase:
+- `DATABASE_URL` — Connection string do PostgreSQL (Settings > Database > URI)
+- `SUPABASE_URL` — URL do projeto (Settings > API)
+- `SUPABASE_ANON_KEY` — Chave pública anon (Settings > API)
+- `SUPABASE_SERVICE_ROLE_KEY` — Chave service role (Settings > API)
+- `SUPABASE_JWT_SECRET` — JWT secret (Settings > API > JWT)
 
 ---
 
-### 🔹 4. Executar a aplicação localmente
+### 🔹 5. Executar a aplicação localmente
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 8000
 ```
 
 A API ficará disponível em:
@@ -92,24 +103,7 @@ docker build -t tropi-api .
 ### 🔹 2. Executar o container
 
 ```bash
-docker run --rm -p 8000:8000 tropi-api
-```
-
----
-
-### 🔹 3. Acessar a aplicação
-
-* API: [http://localhost:8000](http://localhost:8000)
-* Swagger: [http://localhost:8000/docs](http://localhost:8000/docs)
-
----
-
-## 🐳 Docker Compose (opcional)
-
-Para facilitar o uso e manter o banco SQLite persistido:
-
-```bash
-docker compose up --build
+docker run --rm -p 8000:8000 --env-file .env tropi-api
 ```
 
 ---
@@ -120,36 +114,31 @@ A documentação dos endpoints é gerada automaticamente pelo FastAPI e pode ser
 
 👉 **[http://localhost:8000/docs](http://localhost:8000/docs)**
 
-No Swagger é possível:
-
-* Visualizar todos os endpoints
-* Ver os schemas de requisição e resposta
-* Executar chamadas de teste diretamente pelo navegador
-
 ---
 
-## 📌 Estrutura Básica do Projeto
+## 📌 Estrutura do Projeto
 
 ```text
 tropi-api/
+├── .env.example
+├── .github/workflows/ci.yml
 ├── app/
 │   ├── main.py
 │   ├── database.py
 │   ├── models.py
 │   ├── schemas.py
 │   └── routers/
-├── tropi.db
 ├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
+├── dockerfile
 └── README.md
 ```
 
 ---
 
-## 📎 Considerações Finais
+## 📎 Considerações
 
-* Este projeto utiliza **SQLite** para facilitar o desenvolvimento local
-* A estrutura já está preparada para evoluir para **PostgreSQL**
-* O uso de Docker garante um ambiente padronizado para qualquer desenvolvedor
+* O banco de dados é **PostgreSQL** hospedado no **Supabase**
+* Autenticação via **JWT** do Supabase Auth
+* CI configurado com **GitHub Actions** (ruff + mypy)
+* Dockerfile com **multi-stage build** para imagens menores e mais seguras
 
