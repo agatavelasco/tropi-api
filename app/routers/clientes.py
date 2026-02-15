@@ -47,7 +47,6 @@ def criar_cliente(
     db.add(cliente)
     db.commit()
     db.refresh(cliente)
-    db.refresh(cliente)
     return cliente
 
 

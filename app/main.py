@@ -4,12 +4,14 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.database import Base, engine
 from app.routers import clientes, atendimentos, cep
 
 load_dotenv()
 
-Base.metadata.create_all(bind=engine)
+# IMPORTANTE: Nao usar mais Base.metadata.create_all().
+# Toda alteracao no schema deve ser feita via Alembic:
+#   alembic revision --autogenerate -m "descricao"
+#   alembic upgrade head
 
 app = FastAPI(
     title="Tropi API",
