@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app import models, schemas
 from app.deps import get_db
+from app.auth import get_current_user
 
 router = APIRouter(
     prefix="/atendimentos",
@@ -16,7 +17,8 @@ router = APIRouter(
 def listar_atendimentos(
     skip: int = 0,
     limit: int = 100,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
     atendimentos = db.query(models.Atendimento).offset(skip).limit(limit).all()
     return atendimentos
@@ -25,7 +27,8 @@ def listar_atendimentos(
 @router.get("/{atendimento_id}", response_model=schemas.AtendimentoOut)
 def obter_atendimento(
     atendimento_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
     atendimento = (
         db.query(models.Atendimento)
@@ -43,7 +46,8 @@ def obter_atendimento(
 @router.post("/", response_model=schemas.AtendimentoOut, status_code=status.HTTP_201_CREATED)
 def criar_atendimento(
     atendimento_in: schemas.AtendimentoCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
 
     cliente = db.query(models.Cliente).filter(
@@ -72,7 +76,8 @@ def criar_atendimento(
 def atualizar_atendimento(
     atendimento_id: int,
     atendimento_in: schemas.AtendimentoUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
     atendimento = (
         db.query(models.Atendimento)
@@ -107,7 +112,8 @@ def atualizar_atendimento(
 @router.delete("/{atendimento_id}", status_code=status.HTTP_204_NO_CONTENT)
 def deletar_atendimento(
     atendimento_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
     atendimento = (
         db.query(models.Atendimento)

@@ -8,6 +8,5 @@ requests
 email-validator
 pydantic[email]
 alembic
-python-jose[cryptography]
 httpx
 sentry-sdk[fastapi]

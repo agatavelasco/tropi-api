@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from ..deps import get_db
+from ..auth import get_current_user
 from .. import models, schemas
 
 router = APIRouter(
@@ -17,7 +18,8 @@ router = APIRouter(
 def listar_clientes(
     skip: int = 0,
     limit: int = 100,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
     clientes = db.query(models.Cliente).offset(skip).limit(limit).all()
     return clientes
@@ -26,7 +28,8 @@ def listar_clientes(
 @router.get("/{cliente_id}", response_model=schemas.ClienteOut)
 def obter_cliente(
     cliente_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
     cliente = db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
     if not cliente:
@@ -40,7 +43,8 @@ def obter_cliente(
 @router.post("/", response_model=schemas.ClienteOut, status_code=status.HTTP_201_CREATED)
 def criar_cliente(
     cliente_in: schemas.ClienteCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
     # Poderia validar CPF/Email aqui se quiser
     cliente = models.Cliente(**cliente_in.dict())
@@ -54,7 +58,8 @@ def criar_cliente(
 def atualizar_cliente(
     cliente_id: int,
     cliente_in: schemas.ClienteUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
     cliente = db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
     if not cliente:
@@ -75,7 +80,8 @@ def atualizar_cliente(
 @router.delete("/{cliente_id}", status_code=status.HTTP_204_NO_CONTENT)
 def deletar_cliente(
     cliente_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _user: dict = Depends(get_current_user),
 ):
     cliente = db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
     if not cliente:
