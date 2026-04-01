@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[schemas.AtendimentoOut])
+@router.get("", response_model=List[schemas.AtendimentoOut])
 def listar_atendimentos(
     skip: int = 0,
     limit: int = 100,
@@ -43,7 +43,7 @@ def obter_atendimento(
     return atendimento
 
 
-@router.post("/", response_model=schemas.AtendimentoOut, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=schemas.AtendimentoOut, status_code=status.HTTP_201_CREATED)
 def criar_atendimento(
     atendimento_in: schemas.AtendimentoCreate,
     db: Session = Depends(get_db),

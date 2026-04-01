@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[schemas.ClienteOut])
+@router.get("", response_model=List[schemas.ClienteOut])
 def listar_clientes(
     skip: int = 0,
     limit: int = 100,
@@ -40,7 +40,7 @@ def obter_cliente(
     return cliente
 
 
-@router.post("/", response_model=schemas.ClienteOut, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=schemas.ClienteOut, status_code=status.HTTP_201_CREATED)
 def criar_cliente(
     cliente_in: schemas.ClienteCreate,
     db: Session = Depends(get_db),
