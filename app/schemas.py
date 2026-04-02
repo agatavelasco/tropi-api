@@ -2,15 +2,15 @@
 from datetime import datetime
 from typing import Optional, List
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 # ---------------------- CLIENTE ---------------------- #
 
 class ClienteBase(BaseModel):
     nome: str
-    cpf: str
-    email: EmailStr
+    cpf: Optional[str] = None
+    email: Optional[str] = None
     telefone: Optional[str] = None
     cep: Optional[str] = None
     logradouro: Optional[str] = None
@@ -29,9 +29,8 @@ class ClienteCreate(ClienteBase):
 class ClienteUpdate(BaseModel):
     nome: Optional[str] = None
     cpf: Optional[str] = None
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
     telefone: Optional[str] = None
-    endereco: Optional[str] = None
     cep: Optional[str] = None
     logradouro: Optional[str] = None
     numero: Optional[str] = None

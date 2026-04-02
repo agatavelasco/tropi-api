@@ -10,8 +10,8 @@ class Cliente(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String, nullable=False)
-    cpf = Column(String, nullable=False, unique=True)
-    email = Column(String, nullable=False, unique=True)
+    cpf = Column(String, nullable=True)
+    email = Column(String, nullable=True)
     telefone = Column(String, nullable=True)
 
     cep = Column(String(9), nullable=True)         
